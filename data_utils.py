@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-from augs import SyncRandomAffine, SyncToPILImage
+from augs import SyncRandomAffine, SyncToPILImage, SyncColorJitter, SyncRandomVerticalFlip, SyncRandomHorizontalFlip
 from torchvision.transforms import ToPILImage
 
 def find_srcs(src_dir):
@@ -54,11 +54,15 @@ def prepare_datasets(src_dir='./data'):
     img_paths = find_srcs(src_dir)
     train_paths, val_paths = train_val_split(img_paths)
 
-    ra = SyncRandomAffine(degrees=360, translate=(0.2, 0.2), scale=(0.8, 1.2))
-    tpi = SyncToPILImage()
-
-    train_dataset = MRIDataset(train_paths, transforms=[tpi, ra])
-    val_dataset = MRIDataset(val_paths, transforms=[tpi, ra])
+    transforms = [
+        SyncToPILImage(),
+        SyncRandomAffine(degrees=360, translate=(0.05, 0.05), scale=(0.8, 1.2)),
+        SyncColorJitter(0.2, 0.2, 0.2),
+        SyncRandomVerticalFlip(),
+        SyncRandomHorizontalFlip()
+    ]
+    train_dataset = MRIDataset(train_paths, transforms=transforms)
+    val_dataset = MRIDataset(val_paths, transforms=transforms)
 
     return train_dataset, val_dataset
 
@@ -67,6 +71,7 @@ if __name__ == '__main__':
 
     train.aug = False
     for i in range(len(train)):
+        train.aug = False
         img, mask = train[i]
 
         if mask.sum():
