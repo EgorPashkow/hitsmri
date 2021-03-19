@@ -1,7 +1,6 @@
-from torchvision.transforms import RandomAffine, ToPILImage, ColorJitter, RandomHorizontalFlip
+from torchvision.transforms import RandomAffine, ToPILImage, ColorJitter, RandomHorizontalFlip, ToTensor
 import torchvision.transforms.functional as F
 import numpy as np
-
 
 class SyncToPILImage():
 
@@ -10,6 +9,13 @@ class SyncToPILImage():
 
     def __call__(self, img, mask):
         return self.tpi(img), self.tpi(mask)
+
+class SyncToTensor():
+    def __init__(self):
+        self.tt = ToTensor()
+
+    def __call__(self, img, mask):
+        return self.tt(img), self.tt(mask)
 
 
 class SyncRandomAffine():
