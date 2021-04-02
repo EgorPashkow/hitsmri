@@ -26,8 +26,8 @@ class SyncRandomAffine():
         ret = self.trans.get_params(self.trans.degrees, self.trans.translate, self.trans.scale, self.trans.shear,
                                     img.size)
 
-        img_prime = F.affine(img, *ret, resample=self.trans.resample, fillcolor=self.trans.fillcolor)
-        mask_prime = F.affine(mask, *ret, resample=self.trans.resample, fillcolor=self.trans.fillcolor)
+        img_prime = F.affine(img, *ret, interpolation=self.trans.resample, fillcolor=self.trans.fillcolor)
+        mask_prime = F.affine(mask, *ret, interpolation=self.trans.resample, fillcolor=self.trans.fillcolor)
 
         return img_prime, mask_prime
 
