@@ -5,10 +5,10 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-
 from augs import SyncRandomAffine, SyncToPILImage, SyncColorJitter, SyncRandomVerticalFlip, SyncRandomHorizontalFlip, \
     SyncToTensor
 from torchvision.transforms import ToPILImage
+
 
 def find_srcs(src_dir):
     src_dir = Path(src_dir)
@@ -51,6 +51,7 @@ class MRIDataset(Dataset):
 
         return img, mask
 
+
 def prepare_datasets(src_dir='./data'):
     img_paths = find_srcs(src_dir)
     train_paths, val_paths = train_val_split(img_paths)
@@ -67,6 +68,22 @@ def prepare_datasets(src_dir='./data'):
     val_dataset = MRIDataset(val_paths, transforms=transforms)
 
     return train_dataset, val_dataset
+
+def download_data():
+    from pydrive.auth import GoogleAuth
+    from pydrive.drive import GoogleDrive
+    from google.colab import auth
+    from oauth2client.client import GoogleCredentials
+
+    # Authenticate and create the PyDrive client.
+    auth.authenticate_user()
+    gauth = GoogleAuth()
+    gauth.credentials = GoogleCredentials.get_application_default()
+    drive = GoogleDrive(gauth)
+
+    id = '1K1Uha_IfkWkNZmhUsuGskt2vwiuWGyF_'
+    downloaded = drive.CreateFile({'id': id})
+    downloaded.GetContentFile('MRI.zip')
 
 if __name__ == '__main__':
     train, val = prepare_datasets()
