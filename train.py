@@ -8,7 +8,7 @@ from torch import nn
 import numpy as np
 
 
-def visualize_results(loader, model, epoch):
+def visualize_results(loader, model, epoch, phase):
     while True:
         batch = next(iter(loader))
         x, y = batch
@@ -37,10 +37,13 @@ def visualize_results(loader, model, epoch):
     intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
-    plt.imsave(f'{epoch:03d}.png', result)
+    plt.imsave(f'{phase}_{epoch:03d}.png', result)
 
     return None
 
+def tensorboard(losses, phase):
+    plt.semilogy(losses)
+    plt.savefig(f'{phase}_loss.png')
 
 def train():
     # Init data
@@ -67,6 +70,7 @@ def train():
                 torch.set_grad_enabled(False)
 
             loader = loaders[phase]
+            epoch_losses = dict(train=[], val=[])
             running_loss = []
 
             for batch in loader:
@@ -84,12 +88,12 @@ def train():
                     loss.backward()
                     optimizer.step()
 
-                break
-
             # End of Epoch
-
             print(f'{epoch}) {phase} loss: {np.mean(running_loss)}')
-            visualize_results(loader, model, epoch)
+            visualize_results(loader, model, epoch, phase)
+
+            epoch_losses[phase].append(np.mean(running_loss))
+            tensorboard(epoch_losses[phase], phase)
 
             if phase == 'train':
                 scheduler.step()
