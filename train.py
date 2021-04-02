@@ -37,7 +37,7 @@ def visualize_results(loader, model, epoch):
     intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
-    plt.imsave(f'{epoch:02d}.png', result)
+    plt.imsave(f'{epoch:03d}.png', result)
 
     return None
 
