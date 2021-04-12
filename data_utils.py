@@ -1,3 +1,4 @@
+import torch
 from torch.utils.data import Dataset
 from pathlib import Path
 from PIL import Image
@@ -84,6 +85,12 @@ def download_data():
     id = '1K1Uha_IfkWkNZmhUsuGskt2vwiuWGyF_'
     downloaded = drive.CreateFile({'id': id})
     downloaded.GetContentFile('MRI.zip')
+
+def save_model(model, name="model.pt"):
+    torch.save(model, name)
+
+def load_model(name="model.pt"):
+    return torch.load(name)
 
 if __name__ == '__main__':
     train, val = prepare_datasets()

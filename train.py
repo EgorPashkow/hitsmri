@@ -1,3 +1,4 @@
+import data_utils
 from data_utils import prepare_datasets
 from models.unet import UNet
 from torch.utils.data import DataLoader
@@ -53,10 +54,12 @@ def train():
     loaders = dict(train=train_loader, val=val_loader)
 
     # Init Model
-    model = UNet().cuda()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
-    loss_fn = nn.BCELoss()
+    #model = UNet().cuda()
+    #optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
+    #scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
+    #loss_fn = nn.BCELoss()
+
+    model = data_utils.load_model()
 
     epochs = 500
     for epoch in range(epochs):
@@ -91,6 +94,8 @@ def train():
             # End of Epoch
             print(f'{epoch}) {phase} loss: {np.mean(running_loss)}')
             visualize_results(loader, model, epoch, phase)
+
+            data_utils.save_model(model)
 
             epoch_losses[phase].append(np.mean(running_loss))
             tensorboard(epoch_losses[phase], phase)
