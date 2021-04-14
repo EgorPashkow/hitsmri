@@ -96,7 +96,8 @@ def train(model_name=''):
             print(f'{epoch}) {phase} loss: {np.mean(running_loss)}')
             visualize_results(loader, model, epoch, phase)
 
-            data_utils.save_model(model)
+            if(epoch % 10 == 0):
+                data_utils.save_model(model, f'model_{epoch}.pt')
 
             epoch_losses[phase].append(np.mean(running_loss))
             tensorboard(epoch_losses[phase], phase)
