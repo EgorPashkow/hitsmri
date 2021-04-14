@@ -46,7 +46,7 @@ def tensorboard(losses, phase):
     plt.semilogy(losses)
     plt.savefig(f'{phase}_loss.png')
 
-def train():
+def train(model_name=''):
     # Init data
     train_dataset, val_dataset = prepare_datasets()
     train_loader = DataLoader(train_dataset, batch_size=10, shuffle=True)
@@ -54,12 +54,13 @@ def train():
     loaders = dict(train=train_loader, val=val_loader)
 
     # Init Model
-    #model = UNet().cuda()
-    #optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
-    #scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
-    #loss_fn = nn.BCELoss()
-
-    model = data_utils.load_model()
+    if model_name == '':
+        model = UNet().cuda()
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
+        scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
+        loss_fn = nn.BCELoss()
+    else:
+        model = data_utils.load_model(model_name)
 
     epochs = 500
     for epoch in range(epochs):
