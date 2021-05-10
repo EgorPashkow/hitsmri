@@ -53,18 +53,15 @@ class MRIDataset(Dataset):
         return img, mask
 
 
-def prepare_datasets(src_dir='./data'):
-    img_paths = find_srcs(src_dir)
-    train_paths, val_paths = train_val_split(img_paths)
-
-    transforms = [
-        SyncToPILImage(),
+def prepare_datasets(src_dir='./data', transforms=[SyncToPILImage(),
         SyncRandomAffine(degrees=360, translate=(0.05, 0.05), scale=(0.8, 1.2)),
         SyncColorJitter(0.2, 0.2, 0.2),
         SyncRandomVerticalFlip(),
         SyncRandomHorizontalFlip(),
-        SyncToTensor()
-    ]
+        SyncToTensor()]):
+    img_paths = find_srcs(src_dir)
+    train_paths, val_paths = train_val_split(img_paths)
+    
     train_dataset = MRIDataset(train_paths, transforms=transforms)
     val_dataset = MRIDataset(val_paths, transforms=transforms)
 
