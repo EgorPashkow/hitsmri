@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-class DoubleConv(nn.Module):
+class DoubleConvFLAIR(nn.Module):
     def __init__(self, in_ch, out_ch):
         super().__init__()
         self.c1 = nn.Conv2d(in_ch, out_ch, 1)
@@ -25,7 +25,7 @@ class DoubleConv(nn.Module):
         return x
 
 
-class UNet(nn.Module):
+class UNetFLAIR(nn.Module):
     def __init__(self):
         super().__init__()
         self.c1 = DoubleConv(1, 64)
@@ -104,5 +104,5 @@ def resize_and_cat(x1, x2):
 
 if __name__ == '__main__':
     tensor = torch.rand(1, 1, 256, 256)
-    net = UNet()
+    net = UNetFLAIR()
     net(tensor)
