@@ -28,16 +28,16 @@ class DoubleConvFLAIR(nn.Module):
 class UNetFLAIR(nn.Module):
     def __init__(self):
         super().__init__()
-        self.c1 = DoubleConv(1, 64)
-        self.c2 = DoubleConv(64, 128)
-        self.c3 = DoubleConv(128, 256)
-        self.c4 = DoubleConv(256, 512)
-        self.c5 = DoubleConv(512, 512)
+        self.c1 = DoubleConvFLAIR(1, 64)
+        self.c2 = DoubleConvFLAIR(64, 128)
+        self.c3 = DoubleConvFLAIR(128, 256)
+        self.c4 = DoubleConvFLAIR(256, 512)
+        self.c5 = DoubleConvFLAIR(512, 512)
 
-        self.c6 = DoubleConv(1024, 256)
-        self.c7 = DoubleConv(512, 128)
-        self.c8 = DoubleConv(256, 64)
-        self.c9 = DoubleConv(128, 64)
+        self.c6 = DoubleConvFLAIR(1024, 256)
+        self.c7 = DoubleConvFLAIR(512, 128)
+        self.c8 = DoubleConvFLAIR(256, 64)
+        self.c9 = DoubleConvFLAIR(128, 64)
         self.c10 = nn.Conv2d(64, 1, kernel_size=1)
 
         self.pool = nn.MaxPool2d(2)
