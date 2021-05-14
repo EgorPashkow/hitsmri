@@ -72,7 +72,7 @@ class MRIDatasetFLAIR(Dataset):
         if self.aug:
             for transform in self.transforms:
                 img, mask = transform(img, mask)
-        img = img[1]
+        img = img[[1], ...]
         return img, mask
     
 def prepare_datasets(src_dir='./data', transforms=[SyncToPILImage(),
