@@ -33,9 +33,9 @@ def visualize_results(loader, model, epoch, phase):
     intersect = pred.copy()
     intersect[y == 0] = 0
 
-    pred = pred[..., None].repeat(1, -1)
-    y = y[..., None].repeat(1, -1)
-    intersect = intersect[..., None].repeat(1, -1)
+    pred = pred[..., None].repeat(3, -1)
+    y = y[..., None].repeat(3, -1)
+    intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
     plt.imsave(f'{phase}_{epoch:03d}.png', result)
@@ -94,7 +94,7 @@ def train(model_name=''):
 
             # End of Epoch
             print(f'{epoch}) {phase} loss: {np.mean(running_loss)}')
-            visualize_results(loader, model, epoch, phase)
+            #visualize_results(loader, model, epoch, phase)
 
             if(epoch % 10 == 0):
                 data_utils.save_model(model, f'model_{epoch}.pt')
