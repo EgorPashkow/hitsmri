@@ -52,7 +52,29 @@ class MRIDataset(Dataset):
 
         return img, mask
 
+class MRIDatasetFLAIR(Dataset):
+    def __init__(self, img_paths, transforms=[]):
+        mask_paths = [img_path.parent / img_path.name.replace('.tif', '_mask.tif') for img_path in img_paths]
 
+        self.imgs = [plt.imread(path) for path in img_paths]
+        self.masks = [plt.imread(path) for path in mask_paths]
+
+        self.transforms = transforms
+        self.aug = True
+
+    def __len__(self):
+        return len(self.imgs)
+
+    def __getitem__(self, item):
+        img = self.imgs[item]
+        mask = self.masks[item]
+
+        if self.aug:
+            for transform in self.transforms:
+                img, mask = transform(img, mask)
+        img = img[1]
+        return img, mask
+    
 def prepare_datasets(src_dir='./data', transforms=[SyncToPILImage(),
         SyncRandomAffine(degrees=360, translate=(0.05, 0.05), scale=(0.8, 1.2)),
         SyncColorJitter(0.2, 0.2, 0.2),
@@ -64,6 +86,20 @@ def prepare_datasets(src_dir='./data', transforms=[SyncToPILImage(),
     
     train_dataset = MRIDataset(train_paths, transforms=transforms)
     val_dataset = MRIDataset(val_paths, transforms=transforms)
+
+    return train_dataset, val_dataset
+
+def prepare_datasets_FLAIR(src_dir='./data', transforms=[SyncToPILImage(),
+        SyncRandomAffine(degrees=360, translate=(0.05, 0.05), scale=(0.8, 1.2)),
+        SyncColorJitter(0.2, 0.2, 0.2),
+        SyncRandomVerticalFlip(),
+        SyncRandomHorizontalFlip(),
+        SyncToTensor()]):
+    img_paths = find_srcs(src_dir)
+    train_paths, val_paths = train_val_split(img_paths)
+    
+    train_dataset = MRIDatasetFLAIR(train_paths, transforms=transforms)
+    val_dataset = MRIDatasetFLAIR(val_paths, transforms=transforms)
 
     return train_dataset, val_dataset
 
