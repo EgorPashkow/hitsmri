@@ -38,7 +38,7 @@ def visualize_results(loader, model, epoch, phase):
     intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
-    plt.imsave(f'{phase}_{epoch:03d}.png', result)
+    plt.imsave(f'visualization/{phase}_{epoch:03d}.png', result)
 
     return None
 
@@ -97,7 +97,7 @@ def train(model_name=''):
             visualize_results(loader, model, epoch, phase)
 
             if(epoch % 10 == 0):
-                data_utils.save_model(model, f'model_{epoch}.pt')
+                data_utils.save_model(model, f'weight/model_{epoch}.pt')
 
             epoch_losses[phase].append(np.mean(running_loss))
             tensorboard(epoch_losses[phase], phase)
