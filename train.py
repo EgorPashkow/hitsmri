@@ -1,3 +1,4 @@
+import os
 import data_utils
 from data_utils import prepare_datasets
 from models.unet import UNet
@@ -38,7 +39,12 @@ def visualize_results(loader, model, epoch, phase):
     intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
-    plt.imsave(f'visualization/{phase}_{epoch:03d}.png', result)
+    
+    results_dir = 'visualization/'
+    if not os.path.isdir(results_dir):
+        os.makedirs(results_dir)
+        
+    plt.imsave(results_dir+f'{phase}_{epoch:03d}.png', result)
 
     return None
 
@@ -97,7 +103,11 @@ def train(model_name=''):
             visualize_results(loader, model, epoch, phase)
 
             if(epoch % 10 == 0):
-                data_utils.save_model(model, f'weight/model_{epoch}.pt')
+                results_dir = 'weight/'
+                if not os.path.isdir(results_dir):
+                    os.makedirs(results_dir)
+                    
+                data_utils.save_model(model, results_dir+f'model_{epoch}.pt')
 
             epoch_losses[phase].append(np.mean(running_loss))
             tensorboard(epoch_losses[phase], phase)
