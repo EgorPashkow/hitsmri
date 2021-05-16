@@ -39,11 +39,11 @@ def visualize_results(loader, model, epoch, phase):
     intersect = intersect[..., None].repeat(3, -1)
 
     result = np.concatenate([x, y, pred, intersect], 1)
-    script_dir = os.path.dirname(__file__)
-    results_dir = os.path.join(script_dir, 'visualization/')
-
+    
+    results_dir = 'visualization_flair/'
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
+        
     plt.imsave(results_dir+f'{phase}_{epoch:03d}.png', result)
 
     return None
@@ -103,11 +103,10 @@ def train_flair(model_name=''):
             visualize_results(loader, model, epoch, phase)
 
             if(epoch % 10 == 0):
-                script_dir = os.path.dirname(__file__)
-                results_dir = os.path.join(script_dir, 'weight_flair/')
-
+                results_dir = 'weight_flair/'
                 if not os.path.isdir(results_dir):
                     os.makedirs(results_dir)
+                    
                 data_utils.save_model(model, results_dir+f'model_{epoch}.pt')
 
             epoch_losses[phase].append(np.mean(running_loss))
