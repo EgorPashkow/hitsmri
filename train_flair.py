@@ -27,7 +27,7 @@ def visualize_results(loader, model, epoch, phase):
     with torch.no_grad():
         pred = model(x.cuda())
 
-    x = x.numpy()[0, ...].swapaxes(0, -1).swapaxes(0, 1)
+    x = x.numpy()[0, ...].swapaxes(0, -1).swapaxes(0, 1).repeat(3, -1)
     pred = pred.detach().cpu().numpy()[0, 0, ...]
     y = y.detach().cpu().numpy()[0, 0, ...]
     intersect = pred.copy()
