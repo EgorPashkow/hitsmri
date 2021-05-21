@@ -69,6 +69,7 @@ def train(model_name=''):
         model = data_utils.load_model(model_name)
 
     epochs = 500
+    epoch_losses = dict(train=[], val=[])
     for epoch in range(epochs):
         for phase in 'train val'.split():
             if phase == 'train':
@@ -80,7 +81,6 @@ def train(model_name=''):
                 torch.set_grad_enabled(False)
 
             loader = loaders[phase]
-            epoch_losses = dict(train=[], val=[])
             running_loss = []
 
             for batch in loader:
