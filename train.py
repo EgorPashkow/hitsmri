@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch import nn
 import numpy as np
-
+import pandas as pd
 
 def visualize_results(loader, model, epoch, phase):
     while True:
@@ -102,7 +102,7 @@ def train(model_name=''):
             print(f'{epoch}) {phase} loss: {np.mean(running_loss)}')
             visualize_results(loader, model, epoch, phase)
 
-            if(epoch % 10 == 0):
+            if epoch % 10 == 0:
                 results_dir = 'weight/'
                 if not os.path.isdir(results_dir):
                     os.makedirs(results_dir)
@@ -110,6 +110,9 @@ def train(model_name=''):
                 data_utils.save_model(model, results_dir+f'model_{epoch}.pt')
 
             epoch_losses[phase].append(np.mean(running_loss))
+            if phase == 'val':
+              df = pd.DataFrame(data=epoch_losses)
+              df.to_csv('loss.csv')
             tensorboard(epoch_losses[phase], phase)
 
             if phase == 'train':
