@@ -62,11 +62,12 @@ def train(model_name=''):
     # Init Model
     if model_name == '':
         model = UNet().cuda()
-        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
-        scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
-        loss_fn = nn.BCELoss()
     else:
         model = data_utils.load_model(model_name)
+    
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
+    loss_fn = nn.BCELoss()
 
     epochs = 500
     epoch_losses = dict(train=[], val=[])
