@@ -63,7 +63,7 @@ def train(model_name=''):
     if model_name == '':
         model = UNet().cuda()
     else:
-        model = data_utils.load_model(model_name)
+        model = data_utils.load_model(model_name).cuda()
     
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, amsgrad=True)
     scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.984)
